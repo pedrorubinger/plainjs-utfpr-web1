@@ -1,0 +1,13 @@
+#login-container {
+  background-color: rgb(240, 240, 240);
+  height: 100vh;
+}
+
+#login-form {
+  background-color: rgb(255, 255, 255);
+  padding: 30px;
+  border: 1px solid rgb(184, 184, 184);
+  box-shadow: 2px 1px 5px rgb(192, 192, 192);
+  border-radius: 7px;
+  min-width: 370px;
+}
