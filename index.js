@@ -52,7 +52,7 @@ const Login = () => {
 
       if (checkCredentials(username.value, password.value)) {
         removeAlert(form);
-        alert('is valid!');
+        window.location.href = './scripts/pages/Dashboard/dashboard.html';
       } else {
         throw new Error();
       }

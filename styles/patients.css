@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
+
+html {
+  background-color: rgb(240, 240, 240);
+}
+
+#patient-container {
+  background-color: rgb(240, 240, 240);
+  height: 100vh;
+  min-height: 750px;
+  font-family: 'Open Sans', sans-serif;
+  box-sizing: border-box;
+  /* min-width: 700px; */
+}
+
+#patient-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 94%;
+  /* height: calc(100vh - 60px); */
+  height: 100%;
+  margin: auto;
+  /* min-width: 700px; */
+}
+
+#patient-content-card {
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(255, 255, 255);
+  width: 100%;
+  padding: 25px 0;
+  box-shadow: 2px 2px 5px rgb(204, 203, 203);
+  border-radius: 5px;
+  border: 1px solid rgb(218, 215, 215);
+}
+
+#create-patient-container {
+  width: 80%;
+  margin: 20px 0;
+}
+
+#display-patients-container {
+  width: 80%;
+  margin-top: -10px;
+  /* min-width: 550px; */
+}
+
+#display-patients-container table thead {
+  background-color: rgb(30, 132, 216);
+  color: rgb(255, 255, 255);
+}
+
+#patients-feedback h5 {
+  font-size: 17px;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: rgb(78, 77, 77);
+}

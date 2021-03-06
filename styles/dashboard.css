@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
+
+html {
+  background-color: rgb(240, 240, 240);
+}
+
+a {
+  text-decoration: none;
+}
+
+a:link, a:visited, a:hover, a:active {
+  color: rgb(255, 255, 255);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+  color: rgb(255, 255, 255);
+}
+
+#dashboard-container {
+  background-color: rgb(240, 240, 240);
+  height: 100vh;
+  font-family: 'Open Sans', sans-serif;
+  box-sizing: border-box;
+  min-width: 360px;
+}
+
+#dashboard-menu {
+  background-color: rgb(90, 153, 224);
+  width: 100%;
+  text-shadow: 0px 0px 1px rgb(230, 230, 230);
+}
+
+#dashboard-menu nav {
+  box-shadow: 0 0 5px rgb(197, 197, 197);
+  text-transform: uppercase;
+  width: 100%;
+}
+
+#dashboard-menu nav ul li {
+  padding: 15px;
+  cursor: pointer;
+  transition: .4s;
+  color: rgb(255, 255, 255);
+}
+
+#dashboard-menu nav ul li.active {
+  border-bottom: 4px solid rgb(45, 114, 194);
+}
+
+#dashboard-menu nav ul li:hover {
+  background-color: rgb(67, 130, 201);
+}
+
+#dashboard-menu nav ul:last-child {
+  padding-right: 0;
+}
+
+#dashboard-menu nav ul {
+  list-style: none;
+  margin: 0;
+}
+
+#dashboard-menu nav ul li a:hover {
+  text-decoration: none;
+  color: rgb(255, 255, 255);
+}
+
+#dashboard-content {
+  height: calc(100vh - 60px);
+}
+
+#dashboard-default-message {
+  background-color: rgb(255, 255, 255);
+  padding: 30px;
+  width: 80%;
+  box-shadow: 2px 2px 5px rgb(173, 172, 172);
+  border-radius: 5px;
+  min-width: 350px;
+}
+
+#dashboard-default-message h2 {
+  color: rgb(67, 130, 201);
+}
+
+#dashboard-default-message p {
+  color: rgb(70, 67, 67);
+}
+
+@media (max-width: 470px) {
+  #dashboard-menu nav ul li {
+    font-size: 13px;
+  }
+}
