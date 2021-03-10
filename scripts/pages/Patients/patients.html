@@ -45,10 +45,12 @@
           <!-- Button trigger modal -->
           <button
             type="button"
+            id="add-new-patient-btn"
             class="btn btn-outline-primary pl-4 pr-4"
             data-toggle="modal"
             data-target="#addPatient"
             title="Click to include a new patient"
+            onclick="onClickIncludePatient()"
           >
             Add Patient &nbsp;&plus;
           </button>
@@ -81,7 +83,7 @@
                 </div>
                 <div class="modal-body">
                   <form id="include-patient-form">
-                    <div>
+                    <!-- <div>
                       <label for="patientCPF">CPF:</label>
                       <input
                         type="text"
@@ -176,7 +178,7 @@
                         class="form-control"
                         required
                       />
-                    </div>
+                    </div> -->
                   </form>
                 </div>
                 <div class="modal-footer">
@@ -193,7 +195,7 @@
         </div>
   
         <div id="display-patients-container" class="table-responsive">
-          <table class="table table-bordered table-striped">
+          <!-- <table class="table table-bordered table-striped">
             <thead>
               <tr>
                 <th scope="col">CPF</th>
@@ -362,7 +364,7 @@
                 </td>
               </tr>
             </tbody>
-          </table>
+          </table> -->
         </div>
       </div>
     </div>
