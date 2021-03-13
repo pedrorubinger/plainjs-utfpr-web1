@@ -32,13 +32,21 @@ let database = {
 
 const refreshPatientsTable = () => {
   const displayPatients = document.getElementById('display-patients-container');
+  const feedbackContainer = document.getElementById('patients-feedback');
 
   if (displayPatients) {
     if (!database.patients.length) {
-      return displayPatients.innerHTML = `
-        You do not have registered patients.
+      feedbackContainer.innerHTML = `
+        <h5>Patients</h5>
+        <p class="text-muted small">You do not have registered patients.</p>
       `;
+      return displayPatients.innerHTML = ``;
     }
+
+    feedbackContainer.innerHTML = `
+      <h5>Patients</h5>
+      <p class="text-muted small">Currently you have 3 patients.</p>
+    `;
 
     return displayPatients.innerHTML = getResultTable();
   }
