@@ -54,24 +54,74 @@ const refreshPatientsTable = () => {
   return null;
 };
 
-const handleSubmit = (elements) => {
-  const data = [...elements].map((element) => {
-    if (element.type === 'radio') {      
-      if (element.checked) {
-        return {
-          name: element.name,
-          value: element.id,
-        };
-      } else return undefined;
+const handleSubmit = (elements, mode) => {
+  // const data = [...elements].map((element) => {
+  //   if (element.type === 'radio') {      
+  //     if (element.checked) {
+  //       return {
+  //         name: element.name,
+  //         value: element.id,
+  //       };
+  //     } else return undefined;
+  //   }
+
+  //   return { name: element.name, value: element.value };
+  // }).filter((el) => el);
+
+  const data = {};
+
+  [...elements].forEach((element) => {
+      if (element.type === 'radio') {      
+        if (element.checked) {
+          return data[element.name] = element.id.charAt(0).toUpperCase() + element.id.slice(1);
+        } else return;
+      }
+  
+      data[element.name] = element.value;
+      // return { name: element.name, value: element.value };
+  });
+
+  console.log('submitted:', data, mode);
+
+  const hasEmptyFields = () => {
+    let isEmpty = false;
+
+    for(const key in data) {
+      if(data[key] === "") {
+        isEmpty = true;
+        break;
+      }
     }
 
-    return {
-      name: element.name,
-      value: element.value,
-    };
-  }).filter((el) => el);
+    return isEmpty;
+  };
 
-  console.log('submitted:', data);
+  if (hasEmptyFields()) {
+    return alert('You must fill in all fields!');
+  } else {
+    $('#addPatient').modal('hide');
+  }
+
+  // if (data.some((field) => !field.value)) {
+  //   return alert('You must fill in all fields!');
+  // } else {
+  //   $('#addPatient').modal('hide');
+  // }
+
+  if (mode === 'create') {
+    if (database.patients && database.patients.length) {
+      const last = database.patients.find((value, i) => i === database.patients.length - 1);
+
+      // console.log(last);
+      // console.log({ ...data });
+      if (last) database.patients.push({ ...data, id: last.id + 1 });
+    } else {
+      database.patients.push({ ...data, id: 1 });
+    }
+
+    refreshPatientsTable();
+    console.log(database.patients);
+  }
 };
 
 const getPatientForm = (form, data = {}, mode) => {
@@ -174,17 +224,32 @@ const getPatientForm = (form, data = {}, mode) => {
     return true;
   }
 
-  if (form && modalFooter && !saveButton) {
+  if (modalFooter && saveButton) {
+    modalFooter.removeChild(saveButton);
+  }
+
+  if (form && modalFooter) {
     const newSaveButton = document.createElement('button');
-    const gender = document.getElementById('patient-gender-container');
 
     newSaveButton.setAttribute('type', 'button');
     newSaveButton.setAttribute('id', 'include-patient-save-button');
     newSaveButton.setAttribute('class', 'btn btn-primary');
-    newSaveButton.addEventListener('click', () => handleSubmit(form.elements, gender));
+    newSaveButton.addEventListener('click', () => handleSubmit(form.elements, mode));
     newSaveButton.innerText = 'Save';
     modalFooter.appendChild(newSaveButton);
   }
+
+  // if (form && modalFooter && !saveButton) {
+  //   const newSaveButton = document.createElement('button');
+  //   const gender = document.getElementById('patient-gender-container');
+
+  //   newSaveButton.setAttribute('type', 'button');
+  //   newSaveButton.setAttribute('id', 'include-patient-save-button');
+  //   newSaveButton.setAttribute('class', 'btn btn-primary');
+  //   newSaveButton.addEventListener('click', () => handleSubmit(form.elements, gender));
+  //   newSaveButton.innerText = 'Save';
+  //   modalFooter.appendChild(newSaveButton);
+  // }
 
   return true;
 };
@@ -228,6 +293,8 @@ const initOnChangeEvents = () => {
   patientPhone.addEventListener('change', onChangePhone);
 };
 
+
+
 const viewRecord = (id) => {
   const form = document.getElementById('include-patient-form');
   const data = database.patients.find((patient) => patient.id === id);
@@ -251,7 +318,12 @@ const setFieldIsDisable = (value) => {
 };
 
 const editRecord = (id) => {
-  console.log('clicked to edit:', id);
+  const form = document.getElementById('include-patient-form');
+  const data = database.patients.find((patient) => patient.id === id);
+
+  console.log('edit record:', id, data);
+  getPatientForm(form, data, 'edit');
+  setFieldIsDisable(false);
 };
 
 const deleteRecord = (id) => {
@@ -266,7 +338,7 @@ const onClickIncludePatient = () => {
   const form = document.getElementById('include-patient-form');
 
   setFieldIsDisable(false);
-  getPatientForm(form);
+  getPatientForm(form, {}, 'create');
 };
 
 const getActionsTable = (record) => {
@@ -294,6 +366,8 @@ const getActionsTable = (record) => {
 
       <span
         title="Edit patient data"
+        data-toggle="modal"
+        data-target="#addPatient"
         id="action-edit-patient-${record}"
         onclick="editRecord(${record})"
       >
