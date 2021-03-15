@@ -26,8 +26,8 @@ let database = {
       patientMother: 'Phoebe Wilson Johnson',
       patientGender: 'Female',
       patientPhone: '+55 (43) 94110-2200'
-    }
-  ]
+    },
+  ],
 };
 
 const refreshPatientsTable = () => {
@@ -102,26 +102,30 @@ const handleSubmit = (elements, mode) => {
     $('#addPatient').modal('hide');
   }
 
-  // if (data.some((field) => !field.value)) {
-  //   return alert('You must fill in all fields!');
-  // } else {
-  //   $('#addPatient').modal('hide');
-  // }
-
   if (mode === 'create') {
     if (database.patients && database.patients.length) {
       const last = database.patients.find((value, i) => i === database.patients.length - 1);
 
-      // console.log(last);
-      // console.log({ ...data });
       if (last) database.patients.push({ ...data, id: last.id + 1 });
     } else {
       database.patients.push({ ...data, id: 1 });
     }
 
-    refreshPatientsTable();
-    console.log(database.patients);
+  } else if (mode === 'edit') {
+    if (database.patients && database.patients.length) {
+      const updatedDatabase = [...database.patients].map((patient) => {
+        if (patient.patientCPF === data.patientCPF) {
+          return data;
+        }
+
+        return patient;
+      });
+
+      database.patients = updatedDatabase;
+    }
   }
+
+  refreshPatientsTable();
 };
 
 const getPatientForm = (form, data = {}, mode) => {
@@ -239,18 +243,6 @@ const getPatientForm = (form, data = {}, mode) => {
     modalFooter.appendChild(newSaveButton);
   }
 
-  // if (form && modalFooter && !saveButton) {
-  //   const newSaveButton = document.createElement('button');
-  //   const gender = document.getElementById('patient-gender-container');
-
-  //   newSaveButton.setAttribute('type', 'button');
-  //   newSaveButton.setAttribute('id', 'include-patient-save-button');
-  //   newSaveButton.setAttribute('class', 'btn btn-primary');
-  //   newSaveButton.addEventListener('click', () => handleSubmit(form.elements, gender));
-  //   newSaveButton.innerText = 'Save';
-  //   modalFooter.appendChild(newSaveButton);
-  // }
-
   return true;
 };
 
@@ -292,8 +284,6 @@ const initOnChangeEvents = () => {
   // patientGender.addEventListener('change', onChangeGender);
   patientPhone.addEventListener('change', onChangePhone);
 };
-
-
 
 const viewRecord = (id) => {
   const form = document.getElementById('include-patient-form');
@@ -434,7 +424,10 @@ const getResultTable = () => (`
 
 const Patient = () => {
   const form = document.getElementById('include-patient-form');
+  const patientContainer = document.getElementById('patient-container');
 
+  window.Menu(patientContainer, 'patients');
+  // window.Menu.initMenu(patientContainer);
   // initOnChangeEvents();
   refreshPatientsTable();
   getPatientForm(form);
