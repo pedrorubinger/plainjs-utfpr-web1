@@ -18,6 +18,7 @@ const Menu = function () {
           </li>
           <li class="${name === 'appointments' ? 'active' : 'mn-item'}">
             <a
+              id="appointments-menu-link"
               href="../Appointments/appointments.html"
               title="Click to manage your appointments"
             >

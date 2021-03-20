@@ -431,7 +431,6 @@ const Patient = () => {
   // window.Menu.initMenu(patientContainer);
   refreshPatientsTable();
   getPatientForm(form);
-
   getPatientsFromDatabase();
 };
 
