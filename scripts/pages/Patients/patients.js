@@ -213,11 +213,20 @@ const getPatientForm = (form, data = {}, mode) => {
 
       ${mode !== 'view' ? (`
         <div id="patient-gender-container" class="mt-3">
-          <input type="radio" id="male" name="patientGender" value="male">
+          ${data.patientGender === 'Male'
+            ? `<input type="radio" id="male" name="patientGender" value="male" checked>`
+            : `<input type="radio" id="male" name="patientGender" value="male">`
+          }
           <label for="male">Male</label><br>
-          <input type="radio" id="female" name="patientGender" value="female">
+          ${data.patientGender === 'Female'
+            ? `<input type="radio" id="female" name="patientGender" value="female" checked>`
+            : `<input type="radio" id="female" name="patientGender" value="female">`
+          }
           <label for="female">Female</label><br>
-          <input type="radio" id="other" name="patientGender" value="other">
+          ${data.patientGender === 'Other'
+            ? `<input type="radio" id="other" name="patientGender" value="other" checked>`
+            : `<input type="radio" id="other" name="patientGender" value="other">`
+          }
           <label for="other">Other</label>
         </div>
       `) : (`
@@ -272,45 +281,6 @@ const getPatientForm = (form, data = {}, mode) => {
   }
 
   return true;
-};
-
-const initOnChangeEvents = () => {
-  const patientCPF = document.getElementById('patientCPF');
-  const patientName = document.getElementById('patientName');
-  const patientBirthdate = document.getElementById('patientBirthdate');
-  const patientMother = document.getElementById('patientMother');
-  const patientPhone = document.getElementById('patientPhone');
-
-  const onChangeCPF = (e) => {
-    e.preventDefault();
-  };
-
-  const onChangeName = (e) => {
-    e.preventDefault();
-  };
-
-  const onChangeBirthdate = (e) => {
-    e.preventDefault();
-  };
-
-  const onChangeMother = (e) => {
-    e.preventDefault();
-  };
-
-  // const onChangeGender = (e) => {
-    // e.preventDefault();
-  // };
-
-  const onChangePhone = (e) => {
-    e.preventDefault();
-  };
-
-  patientCPF.addEventListener('change', onChangeCPF);
-  patientName.addEventListener('change', onChangeName);
-  patientBirthdate.addEventListener('change', onChangeBirthdate);
-  patientMother.addEventListener('change', onChangeMother);
-  // patientGender.addEventListener('change', onChangeGender);
-  patientPhone.addEventListener('change', onChangePhone);
 };
 
 const viewRecord = (id) => {
@@ -459,7 +429,6 @@ const Patient = () => {
 
   window.Menu(patientContainer, 'patients');
   // window.Menu.initMenu(patientContainer);
-  // initOnChangeEvents();
   refreshPatientsTable();
   getPatientForm(form);
 
