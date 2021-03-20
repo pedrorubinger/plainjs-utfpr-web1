@@ -45,7 +45,7 @@ const refreshPatientsTable = () => {
 
     feedbackContainer.innerHTML = `
       <h5>Patients</h5>
-      <p class="text-muted small">Currently you have 3 patients.</p>
+      <p class="text-muted small">Currently you have ${database.patients.length} patients.</p>
     `;
 
     return displayPatients.innerHTML = getResultTable();
@@ -121,6 +121,7 @@ const handleSubmit = (elements, mode) => {
         return patient;
       });
 
+      console.log(database.patients);
       database.patients = updatedDatabase;
     }
   }
@@ -129,19 +130,33 @@ const handleSubmit = (elements, mode) => {
 };
 
 const getPatientForm = (form, data = {}, mode) => {
+  console.log(mode);
   if (form) {
     form.innerHTML = `
       <div>
         <label for="patientCPF">CPF:</label>
-        <input
-          type="text"
-          name="patientCPF"
-          id="patientCPF"
-          placeholder="CPF"
-          class="form-control"
-          required
-          value="${data.patientCPF || ''}"
-        />
+        ${mode === 'edit' ? (
+          `<input
+            type="text"
+            name="patientCPF"
+            id="patientCPF"
+            placeholder="CPF"
+            class="form-control"
+            disabled
+            readonly
+            value="${data.patientCPF || ''}"
+          />`
+        ) : (`
+          <input
+            type="text"
+            name="patientCPF"
+            id="patientCPF"
+            placeholder="CPF"
+            class="form-control"
+            required
+            value="${data.patientCPF || ''}"
+          />
+        `)}
       </div>
 
       <div class="mt-3">
@@ -312,6 +327,7 @@ const editRecord = (id) => {
   const data = database.patients.find((patient) => patient.id === id);
 
   console.log('edit record:', id, data);
+
   getPatientForm(form, data, 'edit');
   setFieldIsDisable(false);
 };
