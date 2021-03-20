@@ -30,12 +30,23 @@ let database = {
   ],
 };
 
+if (!localStorage.getItem('database')) {
+  localStorage.setItem('database', JSON.stringify(database));
+}
+
+const getPatientsFromDatabase = () => {
+  const data = localStorage.getItem('database');
+
+  return JSON.parse(data);
+};
+
 const refreshPatientsTable = () => {
   const displayPatients = document.getElementById('display-patients-container');
   const feedbackContainer = document.getElementById('patients-feedback');
+  const db = getPatientsFromDatabase();
 
   if (displayPatients) {
-    if (!database.patients.length) {
+    if (!db.patients.length) {
       feedbackContainer.innerHTML = `
         <h5>Patients</h5>
         <p class="text-muted small">You do not have registered patients.</p>
@@ -45,7 +56,7 @@ const refreshPatientsTable = () => {
 
     feedbackContainer.innerHTML = `
       <h5>Patients</h5>
-      <p class="text-muted small">Currently you have ${database.patients.length} patients.</p>
+      <p class="text-muted small">Currently you have ${db.patients.length} patients.</p>
     `;
 
     return displayPatients.innerHTML = getResultTable();
@@ -102,18 +113,20 @@ const handleSubmit = (elements, mode) => {
     $('#addPatient').modal('hide');
   }
 
-  if (mode === 'create') {
-    if (database.patients && database.patients.length) {
-      const last = database.patients.find((value, i) => i === database.patients.length - 1);
+  const db = getPatientsFromDatabase();
 
-      if (last) database.patients.push({ ...data, id: last.id + 1 });
+  if (mode === 'create') {
+    if (db.patients && db.patients.length) {
+      const last = db.patients.find((value, i) => i === db.patients.length - 1);
+
+      if (last) db.patients.push({ ...data, id: last.id + 1 });
     } else {
-      database.patients.push({ ...data, id: 1 });
+      db.patients.push({ ...data, id: 1 });
     }
 
   } else if (mode === 'edit') {
-    if (database.patients && database.patients.length) {
-      const updatedDatabase = [...database.patients].map((patient) => {
+    if (db.patients && db.patients.length) {
+      const updatedDatabase = [...db.patients].map((patient) => {
         if (patient.patientCPF === data.patientCPF) {
           return data;
         }
@@ -121,16 +134,16 @@ const handleSubmit = (elements, mode) => {
         return patient;
       });
 
-      console.log(database.patients);
-      database.patients = updatedDatabase;
+      // console.log(db.patients);
+      db.patients = updatedDatabase;
     }
   }
 
+  localStorage.setItem('database', JSON.stringify(db));
   refreshPatientsTable();
 };
 
 const getPatientForm = (form, data = {}, mode) => {
-  console.log(mode);
   if (form) {
     form.innerHTML = `
       <div>
@@ -302,7 +315,7 @@ const initOnChangeEvents = () => {
 
 const viewRecord = (id) => {
   const form = document.getElementById('include-patient-form');
-  const data = database.patients.find((patient) => patient.id === id);
+  const data = getPatientsFromDatabase().patients.find((patient) => patient.id === id);
   
   getPatientForm(form, data, 'view');
   setFieldIsDisable(true);
@@ -324,7 +337,8 @@ const setFieldIsDisable = (value) => {
 
 const editRecord = (id) => {
   const form = document.getElementById('include-patient-form');
-  const data = database.patients.find((patient) => patient.id === id);
+  const db = getPatientsFromDatabase();
+  const data = db.patients.find((patient) => patient.id === id);
 
   console.log('edit record:', id, data);
 
@@ -333,9 +347,10 @@ const editRecord = (id) => {
 };
 
 const deleteRecord = (id) => {
-  console.log('clicked to delete:', id);
+  const db = getPatientsFromDatabase();
 
-  database.patients = database.patients.filter((record) => record.id !== id);
+  db.patients = db.patients.filter((record) => record.id !== id);
+  localStorage.setItem('database', JSON.stringify(db));
 
   return refreshPatientsTable();
 };
@@ -424,7 +439,7 @@ const getResultTable = () => (`
       </tr>
     </thead>
     <tbody>
-      ${database.patients.map((patient) => (
+      ${getPatientsFromDatabase().patients.map((patient) => (
         `<tr>
           <td>${patient.patientCPF}</td>
           <td>${patient.patientName}</td>
@@ -447,6 +462,8 @@ const Patient = () => {
   // initOnChangeEvents();
   refreshPatientsTable();
   getPatientForm(form);
+
+  getPatientsFromDatabase();
 };
 
 window.Patient = Patient();
