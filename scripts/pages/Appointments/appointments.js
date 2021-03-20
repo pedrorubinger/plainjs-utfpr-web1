@@ -1,23 +1,4 @@
-let appointmentsDatabase = [
-  {
-    id: 1,
-    patient: {
-      patientId: 1,
-      patientCPF: '193.849.299-10',
-      patientName: 'Mark Joe Otto Miller'
-    },
-    appointmentDate: '2021-03-14',
-    appointmentTime: '14:00',
-    appointmentIsFollowUp: 'No',
-    insurance: 'UniBed',
-  },
-];
-
 const patientsList = localStorage.getItem('database') || [];
-
-if (!localStorage.getItem('appointments')) {
-  localStorage.setItem('appointments', JSON.stringify(appointmentsDatabase));
-}
 
 const insurancesList = [
   { id: 1, name: 'None' },
@@ -30,6 +11,13 @@ const getAppointmentsFromDatabase = () => {
   const data = localStorage.getItem('appointments');
 
   return JSON.parse(data);
+};
+
+const getPatientsFromDatabase = () => {
+  const data = localStorage.getItem('database');
+
+  if (data) return JSON.parse(data);
+  return { patients: [] };
 };
 
 const getResultTable = () => (`
@@ -125,11 +113,20 @@ const getActionsTable = (record) => {
   `);
 };
 
-const handleSubmit = (elements, mode) => {
+const handleSubmit = (elements, mode, cpf) => {
   const data = {};
 
   [...elements].forEach((element) => {
-    console.log(element, element.name, element.value);
+    if (['select-one', 'select'].includes(element.type)) {
+      if (element.name === 'patient') {
+        return data.patient = {
+          patientCPF: element.value,
+          patientName: [...getPatientsFromDatabase().patients].find((pat) =>
+            pat.patientCPF === element.value).patientName,
+        };
+      }
+    }
+
     if (element.type === 'radio') {
       if (element.checked) {
         return data[element.name] = element.id.charAt(0).toUpperCase() + element.id.slice(1);
@@ -137,7 +134,6 @@ const handleSubmit = (elements, mode) => {
     }
 
     data[element.name] = element.value;
-    // return { name: element.name, value: element.value };
   });
 
   console.log('submitted:', data, mode);
@@ -161,7 +157,7 @@ const handleSubmit = (elements, mode) => {
     $('#addAppointment').modal('hide');
   }
 
-  const db = getAppointmentsFromDatabase();
+  let db = getAppointmentsFromDatabase();
 
   if (mode === 'create') {
     if (db && db.length) {
@@ -174,58 +170,20 @@ const handleSubmit = (elements, mode) => {
 
   } else if (mode === 'edit') {
     if (db && db.length) {
-      const updatedDatabase = [...db].map((patient) => {
-        if (patient.patientCPF === data.patientCPF) {
-          return data;
+      const updatedDatabase = [...db].map((appointment) => {
+        if (appointment.patient.patientCPF === cpf) {
+          return { ...data, patient: { patientName: data.patient, patientCPF: cpf }};
         }
 
-        return patient;
+        return appointment;
       });
 
-      // console.log(db);
       db = updatedDatabase;
     }
   }
 
   localStorage.setItem('appointments', JSON.stringify(db));
   refreshAppointmentsTable();
-};
-
-const getPatientsFromDatabase = () => {
-  const data = localStorage.getItem('database');
-
-  if (data) return JSON.parse(data);
-  return {
-    patients: [
-      {
-        id: 1,
-        patientCPF: '193.849.299-10',
-        patientName: 'Mark Joe Otto Miller',
-        patientBirthdate: '1993-08-14',
-        patientMother: 'Margareth Adeline Miller',
-        patientGender: 'Male',
-        patientPhone: '+55 (31) 95553-3010'
-      },
-      {
-        id: 2,
-        patientCPF: '192.009.109-20',
-        patientName: 'Josh Murray Garcia Júnior',
-        patientBirthdate: '1985-12-05',
-        patientMother: 'Maria Garcia',
-        patientGender: 'Male',
-        patientPhone: '+55 (43) 94110-2200'
-      },
-      {
-        id: 3,
-        patientCPF: '192.009.109-20',
-        patientName: 'Angela Wilson Johnson',
-        patientBirthdate: '1999-09-03',
-        patientMother: 'Phoebe Wilson Johnson',
-        patientGender: 'Female',
-        patientPhone: '+55 (43) 94110-2200'
-      },
-    ],
-  };
 };
 
 const setFieldIsDisable = (value) => {
@@ -269,7 +227,7 @@ const editRecord = (id) => {
 };
 
 const deleteRecord = (id) => {
-  const db = getAppointmentsFromDatabase();
+  let db = getAppointmentsFromDatabase();
 
   db = db.filter((record) => record.id !== id);
   localStorage.setItem('appointments', JSON.stringify(db));
@@ -394,7 +352,11 @@ const getAppointmentsForm = (form, data = {}, mode) => {
     newSaveButton.setAttribute('type', 'button');
     newSaveButton.setAttribute('id', 'include-appointment-save-button');
     newSaveButton.setAttribute('class', 'btn btn-primary');
-    newSaveButton.addEventListener('click', () => handleSubmit(form.elements, mode));
+    newSaveButton.addEventListener('click', () => handleSubmit(
+      form.elements,
+      mode,
+      data?.patient?.patientCPF
+    ));
     newSaveButton.innerText = 'Save';
     modalFooter.appendChild(newSaveButton);
   }
@@ -430,6 +392,11 @@ const refreshAppointmentsTable = () => {
 const Appointments = () => {
   const form = document.getElementById('include-appointment-form');
   const appointmentsContainer = document.getElementById('appointment-container');
+
+
+  if (!localStorage.getItem('appointments')) {
+    localStorage.setItem('appointments', JSON.stringify([]));
+  }
 
   refreshAppointmentsTable();
   getAppointmentsForm(form);
