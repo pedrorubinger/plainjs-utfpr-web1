@@ -25,6 +25,15 @@ const Menu = function () {
               Appointments
             </a>
           </li>
+          <li class="${name === 'help' ? 'active' : 'mn-item'}">
+            <a
+              id="help-menu-link"
+              href="../Help/help.html"
+              title="Click get help"
+            >
+              Help
+            </a>
+          </li>
           <li>
             <a href="../../../index.html" title="Click to logout">Logout</a>
           </li>

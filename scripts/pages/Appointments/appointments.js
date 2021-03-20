@@ -393,7 +393,6 @@ const Appointments = () => {
   const form = document.getElementById('include-appointment-form');
   const appointmentsContainer = document.getElementById('appointment-container');
 
-
   if (!localStorage.getItem('appointments')) {
     localStorage.setItem('appointments', JSON.stringify([]));
   }
