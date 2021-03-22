@@ -1,0 +1,54 @@
+#help-container {
+  background-color: rgb(255, 255, 255);
+  height: 100vh;
+  min-height: 750px;
+  font-family: 'Open Sans', sans-serif;
+  box-sizing: border-box;
+}
+
+#help-content-header {
+  background-color: rgb(3, 96, 158);
+  padding: 50px;
+  padding-top: 50px;
+  color: #FFF;
+  text-shadow: 1px 0px 0px rgb(235, 235, 235);
+  border-bottom: 1px solid rgb(74, 136, 207);
+}
+
+#help-content-header h1 {
+  font-size: 45px;
+}
+
+#help-content-header p {
+  margin-top: 30px;
+  text-shadow: none;
+  font-size: 16px;
+}
+
+#help-content-body {
+  margin: auto;
+  padding: 40px;
+  background-color: #FFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#help-content-body #help-content-contact-container {
+  width: 100%;
+  /* margin: auto; */
+  margin-top: 5px;
+}
+
+#help-content-contact-container h3 {
+  font-weight: bold;
+  margin-bottom: 30px;
+  font-size: 35px;
+  text-shadow: 1px 1px 0px rgb(226, 225, 225);
+  color: rgb(83, 83, 83);
+}
+
+
+#help-content-contact-container form input {
+  max-width: 500px;
+}
